@@ -20,23 +20,25 @@ class nsclient::install {
   case downcase($::osfamily) {
     'windows': {
 
-      if ! defined(File[$nsclient::download_destination]) {
-        file { $nsclient::download_destination:
-          ensure => directory,
+      if $nsclient::package_install {
+        if ! defined(File[$nsclient::download_destination]) {
+          file { $nsclient::download_destination:
+            ensure => directory,
+          }
         }
-      }
 
-      download_file { 'NSCP-Installer':
-        url                   => $source,
-        destination_directory => $nsclient::download_destination,
-        require               => File[$nsclient::download_destination]
-      }
+        download_file { 'NSCP-Installer':
+          url                   => $source,
+          destination_directory => $nsclient::download_destination,
+          require               => File[$nsclient::download_destination]
+        }
 
-      package { $nsclient::package_name:
-        ensure   => installed,
-        source   => $file,
-        provider => 'windows',
-        require  => Download_file['NSCP-Installer']
+        package { $nsclient::package_name:
+          ensure   => installed,
+          source   => $file,
+          provider => 'windows',
+          require  => Download_file['NSCP-Installer']
+        }
       }
     }
     default: {

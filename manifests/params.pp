@@ -14,6 +14,7 @@ class nsclient::params {
   $package_source_location = 'https://github.com/mickem/nscp/releases/download/0.4.3.143'
   $package_name            = 'NSClient++ (x64)'
   $package_source          = 'NSCP-0.4.3.143-x64.msi'
+  $package_install         = true
   $download_destination    = "c:\\temp"
   $config_template         = 'nsclient/nsclient.ini.erb'
   $check_disk_enabled      = true

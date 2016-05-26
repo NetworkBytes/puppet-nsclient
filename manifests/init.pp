@@ -33,6 +33,9 @@
 # [*package_name*]
 # This is name of the package to download (e.g. NSCP-0.4.1.101-x64.msi)
 #
+# [*package_install*]
+# Boolean (Default: True) whether to install the NSCP package 
+#
 # [*download_destination*]
 # This is the folder to where we need to download the NSCP Installer.
 # Package cannot take a remote file source.
@@ -65,6 +68,7 @@ class nsclient (
   $package_source_location = $nsclient::params::package_source_location,
   $package_source          = $nsclient::params::package_source,
   $package_name            = $nsclient::params::package_name,
+  $package_install         = $nsclient::params::package_install,
   $download_destination    = $nsclient::params::download_destination,
   $config_template         = $nsclient::params::config_template,
   $check_disk_enabled      = $nsclient::params::check_disk_enabled,
