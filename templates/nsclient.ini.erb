@@ -11,60 +11,60 @@
 [/modules]
 
 ; CheckDisk - CheckDisk can check various file and disk related things. The current version has commands to check Size of hard drives and directories.
-CheckDisk = <%= (@check_disk_enabled ? 1 : 0) %>
+CheckDisk = <%= (scope.lookupvar('nsclient::check_disk_enabled') ? 1 : 0) %>
 
 ; Event log Checker. - Check for errors and warnings in the event log. This is only supported through NRPE so if you plan to use only NSClient this wont help you at all.
-CheckEventLog = <%= (@check_eventlog_enabled ? 1 : 0) %>
+CheckEventLog = <%= (scope.lookupvar('nsclient::check_eventlog_enabled') ? 1 : 0) %>
 
 ; Check External Scripts - A simple wrapper to run external scripts and batch files.
-CheckExternalScripts = <%= (@check_scripts_enabled ? 1 : 0) %>
+CheckExternalScripts = <%= (scope.lookupvar('nsclient::check_scripts_enabled') ? 1 : 0) %>
 
 ; Helper function - Various helper function to extend other checks. This is also only supported through NRPE.
-CheckHelpers = <%= (@check_helpers_enabled ? 1 : 0) %>
+CheckHelpers = <%= (scope.lookupvar('nsclient::check_helpers_enabled') ? 1 : 0) %>
 
 ; Check NSCP - Checks the state of the agent
-CheckNSCP = <%= (@check_nscp_enabled ? 1 : 0) %>
+CheckNSCP = <%= (scope.lookupvar('nsclient::check_nscp_enabled') ? 1 : 0) %>
 
 ; CheckSystem - Various system related checks, such as CPU load, process state, service state memory usage and PDH counters.
-CheckSystem = <%= (@check_system_enabled ? 1 : 0) %>
+CheckSystem = <%= (scope.lookupvar('nsclient::check_system_enabled') ? 1 : 0) %>
 
 ; CheckWMI - CheckWMI can check various file and disk related things. The current version has commands to check Size of hard drives and directories.
-CheckWMI = <%= (@check_wmi_enabled ? 1 : 0) %>
+CheckWMI = <%= (scope.lookupvar('nsclient::check_wmi_enabled') ? 1 : 0) %>
 
 ; NRPE server - A simple server that listens for incoming NRPE connection and handles them.
-NRPEServer = <%= (@nrpe_server_enabled ? 1 : 0) %>
+NRPEServer = <%= (scope.lookupvar('nsclient::nrpe_server_enabled') ? 1 : 0) %>
 
 ; NSCAClient - Passive check support over NSCA.
-NSCAClient = <%= (@nsca_client_enabled ? 1 : 0) %>
+NSCAClient = <%= (scope.lookupvar('nsclient::nsca_client_enabled') ? 1 : 0) %>
 
 ; NSClient server - A simple server that listens for incoming NSClient (check_nt) connection and handles them. Although NRPE is the preferred method NSClient is fully supported and can be used for simplicity or for compatibility.
-NSClientServer = <%= (@nsclient_server_enabled ? 1 : 0) %>
+NSClientServer = <%= (scope.lookupvar('nsclient::nsclient_server_enabled') ? 1 : 0) %>
 
 ; Undocumented section
 [/settings/default]
 
 ; ALLOWED HOSTS - A comma-separated list of allowed hosts. You can use netmasks (/ syntax) or * to create ranges.
-allowed hosts = <%= @allowed_hosts.join(",") %>
+allowed hosts = <%= scope.lookupvar('nsclient::allowed_hosts').join(",") %>
 
 ; Should we allow arguments to be passed in by the Nagios server?
 [/settings/NRPE/server]
-allow arguments = <%= @allow_arguments %>
-insecure = <%= @insecure_enabled %>
+allow arguments = <%= scope.lookupvar('nsclient::allow_arguments') %>
+insecure = <%= scope.lookupvar('nsclient::insecure_enabled') %>
 
 ; A list of aliases available. An alias is an internal command that has been "wrapped" (to add arguments). Be careful so you don't create loops (ie check_loop=check_a, check_a=check_loop)
 [/settings/external scripts/alias]
 
 ; alias_cpu - Alias for alias_cpu. To configure this item add a section called: /settings/external scripts/alias/alias_cpu
-alias_cpu = checkCPU warn=<%= (@allow_arguments ? '$ARG1$':'80')%> crit=<%= (@allow_arguments ? '$ARG2$':'90')%> time=5m time=1m time=30s
+alias_cpu = checkCPU warn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'80')%> crit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'90')%> time=5m time=1m time=30s
 
 ; alias_disk - Alias for alias_disk. To configure this item add a section called: /settings/external scripts/alias/alias_disk
-alias_disk = CheckDriveSize MinWarn=<%= (@allow_arguments ? '$ARG1$':'10')%>% MinCrit=<%= (@allow_arguments ? '$ARG2$':'5')%>% CheckAll FilterType=FIXED
+alias_disk = CheckDriveSize MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'10')%>% MinCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'5')%>% CheckAll FilterType=FIXED
 
 ; alias_disk_loose - Alias for alias_disk_loose. To configure this item add a section called: /settings/external scripts/alias/alias_disk_loose
-alias_disk_loose = CheckDriveSize MinWarn=<%= (@allow_arguments ? '$ARG1$':'10')%>% MinCrit=<%= (@allow_arguments ? '$ARG2$':'5')%>% CheckAll FilterType=FIXED ignore-unreadable
+alias_disk_loose = CheckDriveSize MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'10')%>% MinCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'5')%>% CheckAll FilterType=FIXED ignore-unreadable
 
 ; alias_event_log - Alias for alias_event_log. To configure this item add a section called: /settings/external scripts/alias/alias_event_log
-alias_event_log = CheckEventLog file=application file=system MaxWarn=<%= (@allow_arguments ? '$ARG1$':'1')%> MaxCrit=<%= (@allow_arguments ? '$ARG2$':'1')%> "filter=generated gt -2d AND severity NOT IN ('success', 'informational') AND source != 'SideBySide'" truncate=800 unique descriptions "syntax=%severity%: %source%: %message% (%count%)"
+alias_event_log = CheckEventLog file=application file=system MaxWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'1')%> MaxCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'1')%> "filter=generated gt -2d AND severity NOT IN ('success', 'informational') AND source != 'SideBySide'" truncate=800 unique descriptions "syntax=%severity%: %source%: %message% (%count%)"
 
 ; alias_file_age - Alias for alias_file_age. To configure this item add a section called: /settings/external scripts/alias/alias_file_age
 alias_file_age = checkFile2 filter=out "file=$ARG1$" filter-written=>1d MaxWarn=$ARG2$ MaxCrit=$ARG3$ "syntax=%filename% %write%"
@@ -73,7 +73,7 @@ alias_file_age = checkFile2 filter=out "file=$ARG1$" filter-written=>1d MaxWarn=
 alias_file_size = CheckFiles "filter=size > $ARG2$" "path=$ARG1$" MaxWarn=$ARG3$ MaxCrit=$ARG4$ "syntax=%filename% %size%" max-dir-depth=10
 
 ; alias_mem - Alias for alias_mem. To configure this item add a section called: /settings/external scripts/alias/alias_mem
-alias_mem = checkMem MaxWarn=<%= (@allow_arguments ? '$ARG1$':'80')%>% MaxCrit=<%= (@allow_arguments ? '$ARG2$':'90')%>% ShowAll=long type=physical type=virtual type=paged type=page
+alias_mem = checkMem MaxWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'80')%>% MaxCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'90')%>% ShowAll=long type=physical type=virtual type=paged type=page
 
 ; alias_process - Alias for alias_process. To configure this item add a section called: /settings/external scripts/alias/alias_process
 alias_process = checkProcState "$ARG1$=started"
@@ -103,17 +103,17 @@ alias_service = checkServiceState CheckAll
 alias_service_ex = checkServiceState CheckAll "exclude=Net Driver HPZ12" "exclude=Pml Driver HPZ12" exclude=stisvc
 
 ; alias_up - Alias for alias_up. To configure this item add a section called: /settings/external scripts/alias/alias_up
-alias_up = checkUpTime MinWarn=<%= (@allow_arguments ? '$ARG1$':'1d')%> MinWarn=<%= (@allow_arguments ? '$ARG2$':'1h')%>
+alias_up = checkUpTime MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'1d')%> MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'1h')%>
 
 ; alias_updates - Alias for alias_updates. To configure this item add a section called: /settings/external scripts/alias/alias_updates
 alias_updates = check_updates -warning 0 -critical 0
 
 ; alias_volumes - Alias for alias_volumes. To configure this item add a section called: /settings/external scripts/alias/alias_volumes
-alias_volumes = CheckDriveSize MinWarn=<%= (@allow_arguments ? '$ARG1$':'10')%>% MinCrit=<%= (@allow_arguments ? '$ARG2$':'5')%>% CheckAll=volumes FilterType=FIXED
+alias_volumes = CheckDriveSize MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'10')%>% MinCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'5')%>% CheckAll=volumes FilterType=FIXED
 
 ; alias_volumes_loose - Alias for alias_volumes_loose. To configure this item add a section called: /settings/external scripts/alias/alias_volumes_loose
-alias_volumes_loose = CheckDriveSize MinWarn=<%= (@allow_arguments ? '$ARG1$':'10')%>% MinCrit=<%= (@allow_arguments ? '$ARG2$':'5')%>% CheckAll=volumes FilterType=FIXED ignore-unreadable 
-<% @custom_aliases.each do |xalias| -%>
+alias_volumes_loose = CheckDriveSize MinWarn=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG1$':'10')%>% MinCrit=<%= (scope.lookupvar('nsclient::allow_arguments') ? '$ARG2$':'5')%>% CheckAll=volumes FilterType=FIXED ignore-unreadable 
+<% scope.lookupvar('nsclient::custom_aliases').each do |xalias| -%>
 alias_<%= xalias['name'] %> = <%= xalias['command'] %> <%= xalias['args'] %>
 
 <% end -%>
@@ -122,6 +122,6 @@ default =
 
 ; External scripts
 [/settings/external scripts/scripts]
-<% @external_scripts.each do |script| -%>
+<% scope.lookupvar('nsclient::external_scripts').each do |script| -%>
 <%= script['name'] %> = <%= script['command'] %> <%= script['args'] %>
 <% end -%>
