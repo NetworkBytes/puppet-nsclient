@@ -56,6 +56,8 @@ level = debug
 #level = info
 
 
+
+
 # NSCLIENT SERVER SECTION
 # Section for NSClient (NSClientServer.dll) (check_nt) protocol options.
 [/settings/NSClient/server]
@@ -72,8 +74,8 @@ insecure = true
 # NRPE SERVER SECTION
 # Section for NRPE (NRPEServer.dll) (check_nrpe) protocol options.
 # http://docs.nsclient.org/reference/client/NRPEServer.html
-allow arguments = <%= scope.lookupvar('nsclient::allow_arguments') %>
-; insecure = <%= scope.lookupvar('nsclient::insecure_enabled') %>
+[/settings/NRPE/server]
+allow arguments=1
 port=5667
 certificate key =
 certificate = ${certificate-path}/certificate.pem
